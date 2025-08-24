@@ -1,30 +1,33 @@
 import java.util.*;
-public class LongestCommonPrefix {
-    public static String longestCommonPrefix(String[] strs) {
+import java.util.Arrays;
+public class GroupAnagrams {
+    public static List<List<String>> groupAnagrams(String[] strs) {
         if (strs == null || strs.length == 0) {
-            return "";
+            return new ArrayList<>();
         }
 
-        // Take first string as initial prefix
-        String prefix = strs[0];
+        Map<String, List<String>> map = new HashMap<>();
 
-        // Compare with remaining strings
-        for (int i = 1; i < strs.length; i++) {
-            // Keep trimming prefix until it matches
-            while (!strs[i].startsWith(prefix)) {
-                prefix = prefix.substring(0, prefix.length() - 1);
+        for (String s : strs) {
+            // Convert string to char array, sort it, then make a new key
+            char[] chars = s.toCharArray();
+            Arrays.sort(chars);
+            String key = new String(chars);
 
-                if (prefix.isEmpty()) {
-                    return "";
-                }
+            // Put into map
+            if (!map.containsKey(key)) {
+                map.put(key, new ArrayList<>());
             }
+            map.get(key).add(s);
         }
-        return prefix;
+
+        return new ArrayList<>(map.values());
     }
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
-        System.out.println("Enter number of strings:");
+        System.out.print("Enter number of strings: ");
         int n = sc.nextInt();
         sc.nextLine(); // consume newline
 
@@ -34,8 +37,10 @@ public class LongestCommonPrefix {
             strs[i] = sc.nextLine();
         }
 
-        String result = longestCommonPrefix(strs);
-        System.out.println("Longest Common Prefix: \"" + result + "\"");
+        List<List<String>> result = groupAnagrams(strs);
+
+        System.out.println("Grouped Anagrams: " + result);
+
         sc.close();
     }
 }
